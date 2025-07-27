@@ -10,26 +10,24 @@ from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 from aiogram.client.default import DefaultBotProperties
 
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 from aiohttp import web
 
-# Переменные
+# Переменные окружения
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # например: https://название.onrender.com
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Пример: https://your-bot-name.onrender.com
 
-# Проверка
 if not BOT_TOKEN:
     raise ValueError("❌ BOT_TOKEN не найден в переменных окружения!")
 
-# Инициализация
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
 dp = Dispatcher()
 
-# Коды
+# Параметры доступа
 valid_keys = set()
 active_users = {}
 ACCESS_DURATION_SECONDS = 24 * 60 * 60
-IMAGES_COUNT = 10
+IMAGES_COUNT = 10  # Кол-во файлов material1.jpg ... material10.jpg
 
 def generate_code(length=6):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -39,11 +37,10 @@ def has_active_access(user_id: int) -> bool:
 
 @dp.message(Command("random"))
 async def send_code(message: Message):
-    admin_id = 7722389255
+    admin_id = 7722389255  # 🔁 Замени на свой Telegram user ID
     if message.from_user.id != admin_id:
         await message.answer("🚫 У вас нет доступа к этой команде.")
         return
-
     code = generate_code()
     valid_keys.add(code)
     await message.answer(f"`{code}`")
@@ -79,7 +76,7 @@ async def handle_message(message: Message):
     else:
         await message.answer("🚫 Код жараксыз. Жаңы кодду киргизиңиз.")
 
-# Вебсервер с webhook
+# Webhook-сервер для Render
 async def on_startup(app):
     await bot.set_webhook(WEBHOOK_URL)
 
