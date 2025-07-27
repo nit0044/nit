@@ -5,3 +5,4 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn main:app --worker-class aiohttp.GunicornWebWorker --bind 0.0.0.0:10000
+ 
