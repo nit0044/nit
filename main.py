@@ -39,7 +39,7 @@ def has_active_access(user_id: int) -> bool:
 
 @dp.message(Command("random"))
 async def send_code(message: Message):
-    admin_id = 7130597379  # ← замени на свой Telegram user ID
+    admin_id = 7722389255  # ← замени на свой Telegram user ID
     if message.from_user.id != admin_id:
         await message.answer("🚫 У вас нет доступа к этой команде.")
         return
